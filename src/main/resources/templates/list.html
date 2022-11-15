@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../js/vuejs/vuejs-2.5.16.js"></script>
+    <script type="text/javascript" src="../js/vuejs/axios-0.18.0.js"></script>
+</head>
+<body>
+    <div id="app" align="center" style="margin: 5%">
+        <h4>登录成了，看到了用户列表</h4>
+        <table rules="all" border="1">
+            <tr align="center">
+                <td colspan="20">
+                    按照姓名查询:<input type="text  " v-model="searchEntity.name"/>
+                    <input type="button" @click="findAll()" value="检索"/>
+                </td>
+            </tr>
+            <input type="button" value="新增" @click="toInsertManager()"/>
+            <input type="button" value="批量删除" @click="deleteBatch()"/>
+            <tr align="center">
+                <td><input type="checkbox"/></td>
+                <td>编号</td>
+                <td>公司名字</td>
+                <td>法人</td>
+                <td>日期</td>
+                <td>服务</td>
+                <td>状态</td>
+                <th colspan="100">操作</th>
+            </tr>
+            <tr v-for="u in list" align="center">
+                <td>
+                    <input type="checkbox" v-model="cids" :value="u.cid"/>
+                </td>
+                <td>{{u.cid}}</td>
+                <td>{{u.cname}}</td>
+                <td>{{u.name}}</td>
+                <td>{{u.datea}}</td>
+                <td>{{u.service}}</td>
+                <td>{{u.open==1?'开启':'未开启'}}</td>
+                <td>
+                    <input type="button" value="删除" @click="deleteManager(u.cid)"/>
+                    <input type="button" value="修改" @click="toUpdateManager(u.cid)"/>
+                </td>
+            </tr>
+            <tr align="center">
+                <td colspan="100">
+                    当前{{pageInfo.pageNum}}/{{pageInfo.pages}}页，共计{{pageInfo.total}}条记录;
+                    <button @click="paging(1)">首页</button>
+                    <button @click="paging(pageInfo.prePage)">上一页</button>
+                    <button @click="paging(pageInfo.nextPage)">下一页</button>
+                    <button @click="paging(pageInfo.lastPage)">尾页</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                list:[],
+                pageNum:1,
+                pageSize:5,
+                pageInfo:{},
+                searchEntity:{},
+                cids:[],
+                companybean:[],
+            },
+            methods:{
+                paging:function(pageNum){
+                    if(pageNum==0){
+                        pageNum = 1;
+                    }
+                    this.pageNum = pageNum;
+                    this.findAll();
+                },
+                findAll() {
+                    var _this = this
+                    var url = "../manager/findAll?pageNum="+this.pageNum+"&pageSize="+this.pageSize;
+                    axios.post(url,_this.searchEntity).then(function (response) {
+                        _this.list = response.data.list
+                        _this.pageNum = response.data.pageNum;
+                        _this.pageInfo = response.data;
+                    })
+                },
+                deleteManager:function (id) {
+                    var _this = this;
+                    var url = '../manager/deleteManagerById?id='+id;
+                    axios.get(url).then(function (response) {
+                        if(response.data.flag){
+                            _this.findAll();
+                        }else {
+                            alert(response.data.msg);
+                        }
+                    });
+                },
+                toUpdateManager(id) {
+                    location.href = "../main/updateManager?id="+id;
+                },
+                toInsertManager(){
+                    location.href="../main/insertManager"
+                },
+                deleteBatch:function(){
+                    if(this.cids!=null&&this.cids.length>=1){
+                        var _this = this;
+                        axios.post('../manager/deleteBatch',_this.cids).then(function (response) {
+                            if(response.data.flag){
+                                _this.findAll();
+                            }else {
+                                alert(response.data.msg);
+                            }
+                        });
+                    }
+                },
+            },
+            created(){
+                this.findAll();
+            }
+        });
+    </script>
+</body>
+</html>

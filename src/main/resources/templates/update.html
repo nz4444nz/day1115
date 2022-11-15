@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../js/vuejs/vuejs-2.5.16.js"></script>
+    <script type="text/javascript" src="../js/vuejs/axios-0.18.0.js"></script>
+</head>
+<body>
+    <div id="app" align="center" style="margin: 5%">
+     <table>
+         <tr>
+             <td>机构id</td>
+             <td><input v-model="CompanyBean.cid" :value="CompanyBean.cid"></td>
+         </tr>
+         <tr>
+             <td>机构名称</td>
+             <td><input v-model="CompanyBean.cname" ></td>
+         </tr>
+         <tr>
+             <td>法人</td>
+             <td><input v-model="CompanyBean.name" ></td>
+         </tr>
+         <tr>
+             <td>日期</td>
+             <td><input type="date" v-model="CompanyBean.datea" ></td>
+         </tr>
+         <tr>
+             <td>服务</td>
+             <td><input v-model="CompanyBean.service"></td>
+         </tr>
+         <tr>
+             <td>状态</td>
+             <td><input v-model="CompanyBean.open"  placeholder="1开启0未开启"></td>
+         </tr>
+
+         <tr align="cen">
+             <td colspan="100">
+                 <input type="button" value="保存" @click="saveCompany"/>
+             </td>
+         </tr>
+     </table>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                CompanyBean:{}
+            },
+            methods:{
+                saveCompany:function(){
+                    var _this = this;
+                    axios.post('../manager/saveOrUpdate',_this.CompanyBean).then(function (response) {
+                        if(response.data.flag){
+                            location.href ="../main/toList"
+                        }else {
+                            alert(response.data.msg);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

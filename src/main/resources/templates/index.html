@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../js/vuejs/vuejs-2.5.16.js"></script>
+    <script type="text/javascript" src="../js/vuejs/axios-0.18.0.js"></script>
+</head>
+<body>
+    <div id="app" align="center" style="margin: 5%">
+        <h3>你也不想登录折百吧</h3>
+        用户名:<input v-model="manager.username"/><p>
+        密&nbsp;&nbsp;&nbsp;&nbsp;码:<input type="password" v-model="manager.password"/><p>
+        <input type="button" value="登录" @click="getLogin()"/>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data:{
+                manager:{username:'',password:''}
+            },
+            methods:{
+                getLogin:function () {
+                    var _this = this;
+                    axios.post('../manager/getLogin',_this.manager).then(function (response) {
+                        if(response.data.flag){
+                            location.href = "../main/toList";
+                        }else {
+                            alert(response.data.msg);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
