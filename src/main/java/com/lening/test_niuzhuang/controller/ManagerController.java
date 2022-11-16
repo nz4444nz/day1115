@@ -25,7 +25,9 @@ public class ManagerController {
         }else {
             return new ResultInfo(false,"登录失败啊");
         }
+
     }
+
 
     @RequestMapping("/findAll")
     public PageInfo<CompanyBean> findAll(@RequestBody CompanyBean searchEntity,
