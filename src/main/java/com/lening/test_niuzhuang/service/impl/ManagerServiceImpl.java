@@ -7,11 +7,13 @@ import com.lening.test_niuzhuang.entity.ManagerBean;
 import com.lening.test_niuzhuang.mapper.CompanyMapper;
 import com.lening.test_niuzhuang.mapper.ManagerMapper;
 import com.lening.test_niuzhuang.service.ManagerService;
+import org.junit.Test;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,6 +67,8 @@ public class ManagerServiceImpl implements ManagerService {
             if(companyBean.getCid()!=null){
                 companyMapper.updateByPrimaryKeySelective(companyBean);
             }else {
+                String join = org.thymeleaf.util.StringUtils.join(companyBean.getServices(), ",");
+                companyBean.setService(join);
                 companyMapper.insertSelective(companyBean);
             }
         }
@@ -84,5 +88,18 @@ public class ManagerServiceImpl implements ManagerService {
         return companyMapper.selectByPrimaryKey(id);
     }
 
+    @Test
+    public void test(){
+        List<String> list = new ArrayList<>();
+        list.add("Mxy");
+        list.add("String");
+        list.add("join");
+        String join = String.join("-",list);//传入String类型的List集合，使用"-"号拼接
+        System.out.println(join);
+
+        String[] s = new String[]{"Yuan","Mxy"};//传入String类型的数组，使用"-"号拼接
+        String join2 = String.join("-",s);
+        System.out.println(join2);
+    }
 
 }

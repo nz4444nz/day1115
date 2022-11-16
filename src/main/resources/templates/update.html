@@ -27,11 +27,18 @@
          </tr>
          <tr>
              <td>服务</td>
-             <td><input v-model="CompanyBean.service"></td>
+             <td>
+                 <input type="checkbox" v-model="CompanyBean.services" name="室内装修" value="室内装修" >室内装修
+                 <input type="checkbox" v-model="CompanyBean.services" name="室外装修" value="室外装修" >室外装修
+                 <input type="checkbox" v-model="CompanyBean.services" name="设计" value="设计" >设计
+             </td>
          </tr>
          <tr>
              <td>状态</td>
-             <td><input v-model="CompanyBean.open"  placeholder="1开启0未开启"></td>
+             <td>
+                 <input type="radio" v-model="CompanyBean.open" value="1" >开启
+                 <input type="radio" v-model="CompanyBean.open" value="0" >未开启
+             </td>
          </tr>
 
          <tr align="cen">
@@ -45,7 +52,7 @@
         new Vue({
             el:'#app',
             data:{
-                CompanyBean:{}
+                CompanyBean:{services:[]}
             },
             methods:{
                 saveCompany:function(){
