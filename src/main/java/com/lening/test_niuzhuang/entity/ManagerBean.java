@@ -13,6 +13,7 @@ public class ManagerBean {
     private Integer id;
     private String username;
     private String password;
+    @Transient
     private String ss;
 
 
